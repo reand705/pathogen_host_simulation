@@ -33,7 +33,7 @@ function number_of_alleles(population_of_hosts::PopHost)
   length = size(population_of_hosts.population_of_hosts[1].sequences[:,1],1)
   alleles = falses(2^length)
   #frequency = fill(0, 2^length)
-  counters = Int32[]
+  #counters = Int32[]
   for host in population_of_hosts.population_of_hosts
     for i = 1:2
       alleles[to_Integer(host.sequences[:,i]) + 1] = true
@@ -66,7 +66,7 @@ function fitness(population_of_hosts::PopHost)
      fit[i] = fit[i]*fit[i]
      sum_of_squares = sum_of_squares + fit[i]
   end
-  #Se a soma for 0, todos tem a mesma fitness
+  #Se a soma for 0, todos tem a mesma fitness (ou prob de ser escolhido)
   if sum_of_squares == 0.0
      for j = 1:number_of_hosts
        fit[j] = 1.0/number_of_hosts
@@ -159,6 +159,7 @@ end
 
 function random_pathogen(population_of_pathogens::PopPath, size_of_sample::Int32)
   #Return a sample of "size_of_sample" hosts, picked without replacement and with probability proportional to it's fitness
+  #Returns an array if size_of_sample > 1
   fit = fitness(population_of_pathogens)
   return(sample(population_of_pathogens.population_of_pathogens, WeightVec(fit), size_of_sample, replace=false))
 end
@@ -170,7 +171,7 @@ function reproduce(population_of_pathogens::PopPath)
   for i = 1:number_of_pathogens
     # TODO: Is it ok to create a new variable here ?
     path1 = random_pathogen(population_of_pathogens, 1)
-    # TODO: Is it ok to just access the first element of the array?
+    # TODO: Is it ok to just access the first element of the array ?
     new_population[i] = reproduce(path1[1], population_of_pathogens.mutation_rate)
   end
   return(PopPath(new_population, population_of_pathogens.mutation_rate))
@@ -184,7 +185,7 @@ function mutate_alele(mutation_rate::Float64, alele::BitArray)
   length = size(alele,1)
   if rand() < mutation_rate
     for j = 1:length
-      # TODO: iS THERE A BETTER WAY TO ASSING THE NEW ARRAY?
+      # TODO: iS THERE A BETTER WAY TO ASSIGN THE NEW ARRAY?
       alele[j] = rand(Bool)
     end
   end
@@ -234,6 +235,7 @@ function host_presents_peptide(peptide::BitArray, host::Host, minimum_length::In
 end
 
 function to_Integer(boolean_array::BitArray)
+  #Transforma um sequência binária num inteiro
   length = size(boolean_array, 1)
 	integer = 0
 	for i = 1:length
@@ -248,70 +250,6 @@ end
 # Main --------------------------------------------------------------------------
 
 function main()
-
-  #TESTING STUFF
-  #srand(17)
-
-  # number_of_peptides = 4
-  #
-  # host1 = Host(bitrand(2,5), 0)
-  # host2 = Host(bitrand(2,5), 0)
-  # path1 = Path(bitrand(4,5), 0)
-  # population_of_hosts = PopHost([host1; host2], 0.0)
-  # println(population_of_hosts)
-  # println(size(population_of_hosts.population_of_hosts,1))
-
-  #=
-  println(path1)
-
-  println("Host1")
-  println(host1.sequences)
-  resisted!(host1)
-  infected!(path1)
-  println("Host2")
-  println(host2.sequences)
-  println("Path1")
-  println(path1.sequences)
-
-
-  host3 = reproduce(host1,host2)
-  path3 = reproduce(path1)
-  println("Host3")
-  println(host3.sequences)
-  println(host3.number_of_times_that_resisted)
-  println("Path3")
-  println(path3.sequences)
-  println(path3.number_of_times_that_infected)
-  =#
-
-  #
-  # boolarray1 = bitrand(5,1)
-  # boolarray2 = bitrand(4,1)
-  # boolarray3 = bitrand(4,1)
-  #
-  # path1 = Path(boolarray1, 0)
-  # #host1 = Host(boolarray1, 0)
-  # #println(host1.sequences')
-  # path2 = Path(boolarray2, 0)
-  # #host2 = Host(boolarray2, 0)
-  # #println(host2.sequences')
-  # path3 = Path(boolarray3, 0)
-  # #host3 = Host(boolarray3, 0)
-  # #println(host3.sequences')
-  # population_of_pathogens = PopPath([path1], 0.0)
-  # #population_of_hosts = PopHost([host1; host2], 0.0)
-  # infected!(path3)
-  # infected!(path3)
-  # infected!(path3)
-  # infected!(path2)
-  # infected!(path2)
-  # infected!(path1)
-  # println(population_of_pathogens.population_of_pathogens)
-  # newpop = reproduce(population_of_pathogens)
-  # #println(population_of_hosts.population_of_hosts)
-  # println(newpop.population_of_pathogens)
-  # #println(newpop.population_of_hosts)
-  # #println(pathogen_infects_host(path,host,3))
 
 end
 

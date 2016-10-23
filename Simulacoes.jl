@@ -1,4 +1,3 @@
-# TODO: How to to it better?
 include("Classes.jl")
 
 # Parameters
@@ -6,10 +5,10 @@ Npep = 20
 Nloci = 1 #ALWAYS!
 L = 16 #tamanho das bitstrings
 LT = 7 #minimo de compatibilidade
-Nhost = 1000
+Nhost = 1
 NG = 10 #max number of pathogen genotypes
-NS = 50 #number os pathogen species
-T = 1000 #Geracoes de Hosts
+NS = 5 #number os pathogen species
+T = 3 #Geracoes de Hosts
 muhost = 10.0^(-5)
 mupath = 10.0^(-1)
 
@@ -73,7 +72,9 @@ end
 # ------------------------------------------------------------------------------
 function main()
   srand(17)
+
   path_populations = fill(initialize_falses_path_population(NG, mupath, L, Npep), NS)
+  #Calculating the mutation rates for each pathogen population
   for i = 0:(NS-1)
 		potencia = log10(mupath) + (log10(muhost) - log10(mupath))*i/(NS - 1)
 		mu = 10.0^potencia
@@ -82,7 +83,7 @@ function main()
   host_population = initialize_falses_host_population(Nhost, muhost, L)
   #  ----- Main loop -----
 	# For T generations
-  file = open("dados_do_artigo.txt", "w")
+  file = open("dados_do_artigoNEW.txt", "w")
 	numberofalleles = fill(0,T)
   #counters = Array{Int32}[]
 	for i = 1:T
@@ -97,7 +98,7 @@ function main()
 				for k = 1:NS
 					pathogen = random_pathogen(path_populations[k], 1)
 					#verify if Path invades the Host (= compatibility in LT positions)
-					if pathogen_infects_host(pathogen[1],host,LT)
+					if pathogen_infects_host(pathogen[1],host,LT) #[1] porque a random_pathogen devolve um array de tamanho 1
 						#atualize o marcador do Path
 						infected!(pathogen[1])
 
