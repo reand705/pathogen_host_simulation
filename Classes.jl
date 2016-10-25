@@ -248,9 +248,3 @@ function to_Integer(boolean_array::BitArray)
 end
 
 # Main --------------------------------------------------------------------------
-
-function main()
-
-end
-
-main()

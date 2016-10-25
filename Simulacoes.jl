@@ -57,7 +57,7 @@ function initialize_random_path_population(number_of_pathogens::Int32, mutation_
   for i = 2:random_number_of_pathogens
     path_population[i] = initialize_random_pathogen(length_of_locus, number_of_peptides)
   end
-  return(PopPath(path_population, mutation_rate))
+  return(PopPath(path_populat00ion, mutation_rate))
 end
 
 function initialize_falses_path_population(number_of_pathogens::Int32, mutation_rate::Float64, length_of_locus::Int32, number_of_peptides::Int32)
