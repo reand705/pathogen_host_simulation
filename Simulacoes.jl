@@ -83,8 +83,9 @@ function main()
   host_population = initialize_falses_host_population(Nhost, muhost, L)
   #  ----- Main loop -----
 	# For T generations
-  file_hosts = open("fithost.txt", "w")
-  file_paths = open("fitpath.txt", "w")
+  #file_hosts = open("fithost.txt", "w")
+  #file_paths = open("fitpath.txt", "w")
+  file = open("dados_do_artigo.txt", "w")
 	numberofalleles = fill(0,T)
   #counters = Array{Int32}[]
 	for i = 1:T
@@ -118,11 +119,12 @@ function main()
     end
 
     #TESTANDO FITNESS
-
+    #=
     if (i%20 == 0)
       write(file_hosts, "$(fitness(host_population))\n")
       write(file_hosts, "$(fitness(path_populations[25]))\n")
     end
+    =#
 
 		#FITNESS, REPRODUCAO e MUTACAO - Hosts
 		#push!(counters, number_of_alleles(host_population))
@@ -130,10 +132,11 @@ function main()
 		println(numberofalleles[i])
     #println(fitness(host_population))
 		host_population = reproduce(host_population)
-    #write(file, "$(numberofalleles[i]) ")
+    write(file, "$(numberofalleles[i]) ")
   end
-  close(file_hosts)
-  close(file_paths)
+  close(file)
+  #close(file_hosts)
+  #close(file_paths)
 end
 main()
 
