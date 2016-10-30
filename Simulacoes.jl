@@ -5,10 +5,10 @@ Npep = 20
 Nloci = 1 #ALWAYS!
 L = 16 #tamanho das bitstrings
 LT = 7 #minimo de compatibilidade
-Nhost = 1
+Nhost = 1000
 NG = 10 #max number of pathogen genotypes
-NS = 5 #number os pathogen species
-T = 3 #Geracoes de Hosts
+NS = 50 #number os pathogen species
+T = 500 #Geracoes de Hosts
 muhost = 10.0^(-5)
 mupath = 10.0^(-1)
 
@@ -71,7 +71,7 @@ end
 
 # ------------------------------------------------------------------------------
 function main()
-  srand(17)
+  #srand(17)
 
   path_populations = fill(initialize_falses_path_population(NG, mupath, L, Npep), NS)
   #Calculating the mutation rates for each pathogen population
@@ -83,7 +83,8 @@ function main()
   host_population = initialize_falses_host_population(Nhost, muhost, L)
   #  ----- Main loop -----
 	# For T generations
-  file = open("dados_do_artigoNEW.txt", "w")
+  file_hosts = open("fithost.txt", "w")
+  file_paths = open("fitpath.txt", "w")
 	numberofalleles = fill(0,T)
   #counters = Array{Int32}[]
 	for i = 1:T
@@ -116,15 +117,23 @@ function main()
       end
     end
 
+    #TESTANDO FITNESS
+
+    if (i%20 == 0)
+      write(file_hosts, "$(fitness(host_population))\n")
+      write(file_hosts, "$(fitness(path_populations[25]))\n")
+    end
+
 		#FITNESS, REPRODUCAO e MUTACAO - Hosts
 		#push!(counters, number_of_alleles(host_population))
     numberofalleles[i] = number_of_alleles(host_population)
 		println(numberofalleles[i])
     #println(fitness(host_population))
 		host_population = reproduce(host_population)
-    write(file, "$(numberofalleles[i]) ")
+    #write(file, "$(numberofalleles[i]) ")
   end
-  close(file)
+  close(file_hosts)
+  close(file_paths)
 end
 main()
 
