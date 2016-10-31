@@ -122,7 +122,7 @@ function main()
     #=
     if (i%20 == 0)
       write(file_hosts, "$(fitness(host_population))\n")
-      write(file_hosts, "$(fitness(path_populations[25]))\n")
+      write(file_paths, "$(fitness(path_populations[25]))\n")
     end
     =#
 
