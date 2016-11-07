@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-# <nbformat>3.0</nbformat>
-
-# <codecell>
-
 from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 import matplotlib
-matplotlib.get_backend()
 import matplotlib.pyplot as plt
+plt.rcParams['text.usetex']=True
+plt.rc('font', family='serif')
+plt.rcParams['text.latex.unicode']=True
 import numpy as np
 
 # <codecell>
@@ -27,5 +24,5 @@ plt.axis([1,10000,1,20])
 plt.legend(loc = 'best')
 plt.xlabel("Generations")
 plt.ylabel("Number of alleles")
-#plt.title(r"$N_{host} = 1000$, $N_S = 50$, $\mu_{path} = 10^{-1}$, $\mu_{host} = 10^{-5}$")
+plt.title(r"$N_{host} = 1000$, $N_S = 50$, $\mu_{path} = 10^{-1}$, $\mu_{host} = 10^{-5}$")
 plt.show()
