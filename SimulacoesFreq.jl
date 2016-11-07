@@ -1,4 +1,4 @@
-include("Classes.jl")
+include("ClassesFreq.jl")
 
 # Parameters
 Npep = 20
@@ -7,8 +7,8 @@ L = 16 #tamanho das bitstrings
 LT = 7 #minimo de compatibilidade
 Nhost = 1000
 NG = 10 #max number of pathogen genotypes
-NS = 50 #number os pathogen species
-T = 500 #Geracoes de Hosts
+NS = 5 #number os pathogen species
+T = 10000 #Geracoes de Hosts
 muhost = 10.0^(-5)
 mupath = 10.0^(-1)
 
@@ -57,7 +57,7 @@ function initialize_random_path_population(number_of_pathogens::Int32, mutation_
   for i = 2:random_number_of_pathogens
     path_population[i] = initialize_random_pathogen(length_of_locus, number_of_peptides)
   end
-  return(PopPath(path_populat00ion, mutation_rate))
+  return(PopPath(path_population, mutation_rate))
 end
 
 function initialize_falses_path_population(number_of_pathogens::Int32, mutation_rate::Float64, length_of_locus::Int32, number_of_peptides::Int32)
@@ -73,24 +73,23 @@ end
 function main()
   #srand(17)
 
-  path_populations = fill(initialize_falses_path_population(NG, mupath, L, Npep), NS)
+  #path_populations = fill(initialize_falses_path_population(NG, mupath, L, Npep), NS)
   #Calculating the mutation rates for each pathogen population
-  for i = 0:(NS-1)
-		potencia = log10(mupath) + (log10(muhost) - log10(mupath))*i/(NS - 1)
-		mu = 10.0^potencia
-		path_populations[i+1] = initialize_falses_path_population(NG,mu,L,Npep)
+  #for i = 0:(NS-1)
+		#potencia = log10(mupath) + (log10(muhost) - log10(mupath))*i/(NS - 1)
+		#mu = 10.0^potencia
+		#path_populations[i+1] = initialize_falses_path_population(NG,mu,L,Npep)
   end
   host_population = initialize_falses_host_population(Nhost, muhost, L)
   #  ----- Main loop -----
 	# For T generations
-  #file_hosts = open("fithost.txt", "w")
-  #file_paths = open("fitpath.txt", "w")
-  file = open("dados_do_artigo.txt", "w")
-	numberofalleles = fill(0,T)
+  file = open("Heteros_muhost_=_$(muhost)_10.txt", "w")
+	H = fill(0.0,T)
   #counters = Array{Int32}[]
 	for i = 1:T
 		println("T = $(i)")
 		 #For 10 generations of Paths
+     #=
 		for j = 1:10
 
 			#INFECCAO
@@ -117,26 +116,16 @@ function main()
 				path_populations[k] = reproduce(path_populations[k])
       end
     end
-
-    #TESTANDO FITNESS
-    #=
-    if (i%20 == 0)
-      write(file_hosts, "$(fitness(host_population))\n")
-      write(file_paths, "$(fitness(path_populations[25]))\n")
-    end
     =#
 
 		#FITNESS, REPRODUCAO e MUTACAO - Hosts
-		#push!(counters, number_of_alleles(host_population))
-    numberofalleles[i] = number_of_alleles(host_population)
-		println(numberofalleles[i])
+    H[i] = Heterosigozity(number_of_alleles(host_population))
+		#println(H[i])
     #println(fitness(host_population))
 		host_population = reproduce(host_population)
-    write(file, "$(numberofalleles[i]) ")
+    write(file, "$(H[i]) ")
   end
   close(file)
-  #close(file_hosts)
-  #close(file_paths)
 end
 main()
 
