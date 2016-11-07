@@ -32,12 +32,12 @@ function number_of_alleles(population_of_hosts::PopHost)
   #devolve o numero de alelos distintos da populacao
   length = size(population_of_hosts.population_of_hosts[1].sequences[:,1],1)
   #alleles = falses(2^length)
-  frequency = fill(0, 2^length)
+  frequency = fill(Int32(0), 2^length)
   counters = Int32[]
   for host in population_of_hosts.population_of_hosts
     for i = 1:2
       #alleles[to_Integer(host.sequences[:,i]) + 1] = true
-      frequency[to_Integer(host.sequences[:,i]) + 1] += 1
+      frequency[to_Integer(host.sequences[:,i]) + 1] += Int32(1)
     end
   end
   #for i = 1:2^length
@@ -92,7 +92,7 @@ function reproduce(population_of_hosts::PopHost)
   new_population = fill(population_of_hosts.population_of_hosts[1], number_of_hosts)
   for i = 1:number_of_hosts
     # TODO: Is it ok to create a new variable here ?
-    (host1, host2) = random_hosts(population_of_hosts, 2)
+    (host1, host2) = random_hosts(population_of_hosts, Int32(2))
     new_population[i] = reproduce(host1, host2, population_of_hosts.mutation_rate)
   end
   return(PopHost(new_population, population_of_hosts.mutation_rate))
@@ -237,13 +237,12 @@ end
 function to_Integer(boolean_array::BitArray)
   #Transforma um sequência binária num inteiro
   length = size(boolean_array, 1)
-	integer = 0
+	integer = Int32(0)
 	for i = 1:length
 		if boolean_array[i]
-			integer = integer + 2^(i-1)
+			integer = integer + Int32(2^(i-1))
     end
   end
-
 	return integer
 end
 
